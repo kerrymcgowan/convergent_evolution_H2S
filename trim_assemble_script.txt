@@ -1,0 +1,84 @@
+##############################################################################################
+#
+#                           1. Downloading Raw Reads from NCBI SRA
+#
+##############################################################################################
+####### All code was run on Washington State University's high performance computer
+# Runs fastq-dump from SRA Toolkit to download multiple accessions listed in the file srr_id_list.txt from NCBI SRA
+# Output is located downloaded_data folder in FASTQ format
+
+# Version: sratoolkit/2.9.0
+
+while read line || [ -n "$line" ];
+do
+	SRR_ID=$(echo $line | awk '{print $1}')
+
+fastq-dump \
+--outdir downloaded_data \
+--gzip \
+--skip-technical \
+--readids \
+--read-filter pass \
+--dumpbase \
+--split-files \
+--clip \
+$SRR_ID
+
+done < srr_id_list.txt
+
+##############################################################################################
+#
+#                                 2. Trimming Raw Reads
+#
+##############################################################################################
+# Runs Trim Galore!
+
+# Version: trimgalore/0.4.5; also requires
+  # Version: fastqc/0.11.4
+  # Version: cutadapt/1.9
+
+# Run Trim Galore! using quality 0 to remove overrepresented sequences
+
+# Run Trim Galore! using quality 0 to hard clip 
+
+trim_galore \
+        --quality 0 \
+        --clip_R1 11 \
+        --fastqc_args "--noextract --nogroup --outdir trim" \
+        --length 50 \
+        species.fq.gz
+
+#
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
